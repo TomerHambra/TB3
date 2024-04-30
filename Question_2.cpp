@@ -164,7 +164,7 @@ typedef struct DataStructure {
         auto lca = tree1.lca(left_node, right_node);
 
 
-        month_hits_subtrees = new avl_tree_node<Record> * [2 * tree1.root->height]; /// TODO delete.
+        month_hits_subtrees = new avl_tree_node<Record> * [2 * tree1.root->height];
         // inserting left path from lca to left_node
         auto it = lca->left;
         while(it != left_node) month_hits_subtrees[amount_of_left_subtrees++] = it, it = it->left;
