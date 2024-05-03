@@ -297,11 +297,25 @@ struct avl_tree {
         return t;
     }
 
+    // Time Complexity: O(log n)
+    avl_tree_node<T> *node_by_rank(int r){
+        if(_size == 0 || r < 1 || r > _size) return nullptr;
+        return _get_rank(root, r);
+    }
+
+    // Time Complexity: O(log n)
+    avl_tree_node<T> *_get_rank(avl_tree_node<T> *node, int r){
+        if(node == nullptr) return nullptr;
+        if(node->left == nullptr) {
+            if(r == 1) return node;
+            return _get_rank(node->right, r - 1);
+        }
+        if(r == node->left->count + 1) return node;
+        if(r < node->left->count + 1) return _get_rank(node->left, r - 1);
+        return _get_rank(node->right, r - node->left->count - 1);
+    }
     /// TODO:
     ///    - Split for avl trees.
-    ///    - Rank j for avl trees.
-
-
 
     // Time Complexity: O(1)
     int size() const { return _size; }
