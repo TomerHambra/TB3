@@ -146,8 +146,9 @@ typedef struct DataStructure {
     void Pick_Month_Hits(int i, int j){
         /*
          * Description:
-         *      The function finds the lca of the Record i, and the Record j, and inserts all the nodes in the paths from the
-         *      lca to these nodes. This helps the function Show_Month_Hits() to print out the correct subtrees of these nodes.
+         *      The function finds the lca of the Record i, and the Record j, and inserts all the nodes in the path from the
+         *      lca to the left node in which we turned right and vice versa.
+         *      This helps the function Show_Month_Hits() to print out the correct subtrees of these nodes.
          *      Time Complexity: O(log n).
          *      Proof:
          *          getting the lca as described in the avl_tree implementation is only travelling through at most 2 search
@@ -165,16 +166,26 @@ typedef struct DataStructure {
 
 
         month_hits_subtrees = new avl_tree_node<Record> * [2 * tree1.root->height];
-        // inserting left path from lca to left_node
-        auto it = lca->left;
-        while(it != left_node) month_hits_subtrees[amount_of_left_subtrees++] = it, it = it->left;
-        month_hits_subtrees[amount_of_left_subtrees++] = left_node;
+        // inserting right path from lca to left_node
+        auto it = lca;
+        while(it != left_node) {
+            if(it->value < left_node->value){ // only right turned nodes
+                it = it->right;
+                month_hits_subtrees[amount_of_left_subtrees++] = it;
+            } else it = it->left;
+        }
+        if(month_hits_subtrees[amount_of_left_subtrees-1] != left_node) month_hits_subtrees[amount_of_left_subtrees++] = left_node;
 
-        // inserting right path from lca to right_node
-        it = lca->right;
+        // inserting left path from lca to right_node
+        it = lca;
         amount_of_subtrees = amount_of_left_subtrees;
-        while(it != right_node) month_hits_subtrees[amount_of_subtrees++] = it, it = it->right;
-        month_hits_subtrees[amount_of_subtrees++] = right_node;
+        while(it != right_node) {
+            if(right_node->value < it->value){ // only left turned nodes
+                it = it->left;
+                month_hits_subtrees[amount_of_left_subtrees++] = it;
+            } else it = it->right;
+        }
+        if(month_hits_subtrees[amount_of_left_subtrees-1] != right_node) month_hits_subtrees[amount_of_subtrees++] = right_node;
 
     }
 
