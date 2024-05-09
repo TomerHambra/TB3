@@ -94,13 +94,6 @@ typedef struct SeriesElements {
 } SeriesElements;
 
 
-typedef struct SeriesNode {
-
-
-
-} SeriesNode;
-
-
 
 /****************************************************************************
        F  I  N  A  L      D  A  T  A      S  T  R  U  C  T  U  R  E

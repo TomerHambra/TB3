@@ -215,7 +215,7 @@ struct avl_tree_node {
 template <typename T>
 struct avl_tree {
     /// NOTE: Keep in mind that unless specified otherwise, n is the amount of elements which is equivalent to _size.
-    int _size;
+    int _size, x;
     avl_tree_node<T> *root;
     bool (*comp)(T&, T&);
     void (*node_update)(avl_tree_node<T>*);
@@ -247,11 +247,15 @@ struct avl_tree {
     }
 
     // Time Complexity: O(log n)
-    void insert(T key){ root = _insert(root, key); }
+    void insert(T key){
+        x = 0; // control for using _insert() as the main insert func.
+        root = _insert(root, key);
+        _size += (x==1);
+    }
 
     // Time Complexity: O(log n)
     avl_tree_node<T>* _insert(avl_tree_node<T> *node, T key) {
-        if(node == nullptr) return _size++, new avl_tree_node<T>(key, node_update);
+        if(node == nullptr) return x = 1, new avl_tree_node<T>(key, node_update);
 
         // deciding the direction to go down in.
         if(comp(key, node->value)) node->left = _insert(node->left, key);
@@ -384,6 +388,21 @@ struct avl_tree {
         if(r == node->left->count + 1) return node;
         if(r < node->left->count + 1) return _get_rank(node->left, r - 1);
         return _get_rank(node->right, r - node->left->count - 1);
+    }
+    // TODO:
+    //    - SPLIT AVL TREE
+    avl_tree<T> *split(avl_tree_node<T> * node){
+
+    }
+
+    avl_tree_node<T> _concat(avl_tree_node<T> * t1, avl_tree_node<T> * k, avl_tree_node<T> * t2){
+        if(k == nullptr) k = new avl_tree_node<T>(max_node(t1)), _delete(t1, k->value);
+        else if(t1 == nullptr) {
+            auto& key = k->value;
+            delete k; return _insert(t2, key);
+        } else if(t2 == nullptr) {
+
+        }
     }
 
     // Time Complexity: O(1)
