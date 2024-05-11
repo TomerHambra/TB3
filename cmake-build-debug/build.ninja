@@ -41,37 +41,94 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = C$:/Users/omega/CLionProjects/TR3/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target TR3
+# Object build statements for EXECUTABLE target Q12
 
 
 #############################################
-# Order-only phony target for TR3
+# Order-only phony target for Q12
 
-build cmake_object_order_depends_target_TR3: phony || CMakeFiles/TR3.dir
+build cmake_object_order_depends_target_Q12: phony || CMakeFiles/Q12.dir
 
-build CMakeFiles/TR3.dir/main.cpp.obj: CXX_COMPILER__TR3_unscanned_Debug C$:/Users/omega/CLionProjects/TR3/main.cpp || cmake_object_order_depends_target_TR3
-  DEP_FILE = CMakeFiles\TR3.dir\main.cpp.obj.d
+build CMakeFiles/Q12.dir/main.cpp.obj: CXX_COMPILER__Q12_unscanned_Debug C$:/Users/omega/CLionProjects/TR3/main.cpp || cmake_object_order_depends_target_Q12
+  DEP_FILE = CMakeFiles\Q12.dir\main.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles\TR3.dir
-  OBJECT_FILE_DIR = CMakeFiles\TR3.dir
+  OBJECT_DIR = CMakeFiles\Q12.dir
+  OBJECT_FILE_DIR = CMakeFiles\Q12.dir
+
+build CMakeFiles/Q12.dir/data_structures_library.cpp.obj: CXX_COMPILER__Q12_unscanned_Debug C$:/Users/omega/CLionProjects/TR3/data_structures_library.cpp || cmake_object_order_depends_target_Q12
+  DEP_FILE = CMakeFiles\Q12.dir\data_structures_library.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\Q12.dir
+  OBJECT_FILE_DIR = CMakeFiles\Q12.dir
+
+build CMakeFiles/Q12.dir/Question_2.cpp.obj: CXX_COMPILER__Q12_unscanned_Debug C$:/Users/omega/CLionProjects/TR3/Question_2.cpp || cmake_object_order_depends_target_Q12
+  DEP_FILE = CMakeFiles\Q12.dir\Question_2.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\Q12.dir
+  OBJECT_FILE_DIR = CMakeFiles\Q12.dir
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target TR3
+# Link build statements for EXECUTABLE target Q12
 
 
 #############################################
-# Link the executable TR3.exe
+# Link the executable Q12.exe
 
-build TR3.exe: CXX_EXECUTABLE_LINKER__TR3_Debug CMakeFiles/TR3.dir/main.cpp.obj
+build Q12.exe: CXX_EXECUTABLE_LINKER__Q12_Debug CMakeFiles/Q12.dir/main.cpp.obj CMakeFiles/Q12.dir/data_structures_library.cpp.obj CMakeFiles/Q12.dir/Question_2.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
-  OBJECT_DIR = CMakeFiles\TR3.dir
+  OBJECT_DIR = CMakeFiles\Q12.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_FILE = TR3.exe
-  TARGET_IMPLIB = libTR3.dll.a
-  TARGET_PDB = TR3.exe.dbg
+  TARGET_FILE = Q12.exe
+  TARGET_IMPLIB = libQ12.dll.a
+  TARGET_PDB = Q12.exe.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target Q3
+
+
+#############################################
+# Order-only phony target for Q3
+
+build cmake_object_order_depends_target_Q3: phony || CMakeFiles/Q3.dir
+
+build CMakeFiles/Q3.dir/main2.cpp.obj: CXX_COMPILER__Q3_unscanned_Debug C$:/Users/omega/CLionProjects/TR3/main2.cpp || cmake_object_order_depends_target_Q3
+  DEP_FILE = CMakeFiles\Q3.dir\main2.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\Q3.dir
+  OBJECT_FILE_DIR = CMakeFiles\Q3.dir
+
+build CMakeFiles/Q3.dir/data_structures_library.cpp.obj: CXX_COMPILER__Q3_unscanned_Debug C$:/Users/omega/CLionProjects/TR3/data_structures_library.cpp || cmake_object_order_depends_target_Q3
+  DEP_FILE = CMakeFiles\Q3.dir\data_structures_library.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\Q3.dir
+  OBJECT_FILE_DIR = CMakeFiles\Q3.dir
+
+build CMakeFiles/Q3.dir/Question_3.cpp.obj: CXX_COMPILER__Q3_unscanned_Debug C$:/Users/omega/CLionProjects/TR3/Question_3.cpp || cmake_object_order_depends_target_Q3
+  DEP_FILE = CMakeFiles\Q3.dir\Question_3.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\Q3.dir
+  OBJECT_FILE_DIR = CMakeFiles\Q3.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target Q3
+
+
+#############################################
+# Link the executable Q3.exe
+
+build Q3.exe: CXX_EXECUTABLE_LINKER__Q3_Debug CMakeFiles/Q3.dir/main2.cpp.obj CMakeFiles/Q3.dir/data_structures_library.cpp.obj CMakeFiles/Q3.dir/Question_3.cpp.obj
+  FLAGS = -g
+  LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  OBJECT_DIR = CMakeFiles\Q3.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = Q3.exe
+  TARGET_IMPLIB = libQ3.dll.a
+  TARGET_PDB = Q3.exe.dbg
 
 
 #############################################
@@ -99,7 +156,9 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
-build TR3: phony TR3.exe
+build Q12: phony Q12.exe
+
+build Q3: phony Q3.exe
 
 # =============================================================================
 # Folder targets.
@@ -109,7 +168,7 @@ build TR3: phony TR3.exe
 #############################################
 # Folder: C:/Users/omega/CLionProjects/TR3/cmake-build-debug
 
-build all: phony TR3.exe
+build all: phony Q12.exe Q3.exe
 
 # =============================================================================
 # Built-in targets
