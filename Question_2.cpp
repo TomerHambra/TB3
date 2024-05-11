@@ -165,7 +165,7 @@ typedef struct DataStructure {
         auto lca = tree1.lca(left_node, right_node);
 
 
-        month_hits_subtrees = new avl_tree_node<Record> * [2 * tree1.root->height];
+        month_hits_subtrees = new avl_tree_node<Record> * [2 * tree1.root->height + 2];
         // inserting right path from lca to left_node
         auto it = lca;
         while(it != left_node) {
@@ -186,7 +186,7 @@ typedef struct DataStructure {
             } else it = it->right;
         }
         if(month_hits_subtrees[amount_of_left_subtrees-1] != right_node) month_hits_subtrees[amount_of_subtrees++] = right_node;
-
+        month_hits_subtrees[amount_of_subtrees] = lca;
     }
 
     void Show_Month_Hits() {
@@ -200,6 +200,7 @@ typedef struct DataStructure {
         std::cout << "Month Hits: \n";
         for(int i = amount_of_left_subtrees-1; i >= 0; i--)
             std::cout << month_hits_subtrees[i]->value.name << " ", inorder_print(month_hits_subtrees[i]->right);
+        std::cout << month_hits_subtrees[amount_of_subtrees]->value.name << " ";
         for(int i = amount_of_subtrees-1; i >= amount_of_subtrees; i--)
             std::cout << month_hits_subtrees[i]->value.name << " ", inorder_print(month_hits_subtrees[i]->left);
     }
