@@ -16,9 +16,78 @@
                 D  A  T  A      S  T  R  U  C  T  U  R  E  S
 ****************************************************************************/
 
-/**------------------------- Helper Functions -----------------------------**/
+/**------------------------- Helper Functions ----------------------------**/
 // Time Complexity: O(1)
 int max(int a, int b){ return a < b ? b : a; }
+
+
+/**------------------------- 2-3 Tree ------------------------------------**/
+
+template <typename T>
+struct node_2_3 {
+    T k1, k2;
+    node_2_3<T> *left, *mid, *right;
+    int n;
+};
+
+template <typename T>
+struct inout_data {
+    T mid_value;
+    node_2_3<T> * child;
+
+    inout_data(node_2_3<T> * child= nullptr, T m = {}) : child(child), mid_value(m) {}
+
+    inout_data(inout_data<T> &other){ child = other.child, mid_value = other.mid_value; }
+
+    inout_data<T>& operator = (inout_data<T> &other){
+        if(&other != this)
+            child = other.child, mid_value = other.mid_value;
+        return *this;
+    }
+};
+
+
+template <typename T>
+struct tree_2_3 {
+    int _size;
+    node_2_3<T> * root;
+
+    tree_2_3() : root(nullptr) {}
+
+    ~tree_2_3() {
+        if(root != nullptr) kill(root);
+    }
+
+    void kill(node_2_3<T> * node){
+        if(node == nullptr) return;
+        kill(node->left), kill(node->mid), kill(node->right);
+        delete node;
+    }
+
+    int is_rotation_possible(node_2_3<T> *p, node_2_3<T> *r){
+        if(p == r) return 0; // if r == root : no rotation
+        if(p->n == 1) { // parent is a two node
+            if(r->n == 0){
+                if(p->left == r && p->mid->n == 2) return 2;
+                if(p->mid == r && p->left->n == 2) return 1;
+            }else if (p->left->n == 2 && p->middle->n == 2) return (p->left == r) ? 1 : 2;
+            return 0;
+        }
+        if(r->n == 0){
+            if(p->left == r && p->mid->n == 2) return 2;
+            else if(p->mid == r) {
+                if(p->left->n == 2) return 1;
+                if(p->right->n == 2) return 2;
+            } else if(p->mid->n == 2) return 1;
+            return 0;
+        } if(p->left == r && p->mid->n == 1) return 1;
+        if(p->mid == r){
+            if(p->left->n == 1) return 2;
+            if(p->right->n == 1) return 1;
+            return 0;
+        }return 2 * (p->middle->n == 1);
+    } // https://github.com/harismuneer/2-3-Tree/blob/master/2-3%20Tree%20(Balanced%20Search%20Tree).cpp
+};
 
 
 /**------------------------- Dynamic Array -------------------------------**/
@@ -146,7 +215,7 @@ struct avl_tree_node {
 template <typename T>
 struct avl_tree {
     /// NOTE: Keep in mind that unless specified otherwise, n is the amount of elements which is equivalent to _size.
-    int _size;
+    int _size, x;
     avl_tree_node<T> *root;
     bool (*comp)(T&, T&);
     void (*node_update)(avl_tree_node<T>*);
@@ -178,11 +247,15 @@ struct avl_tree {
     }
 
     // Time Complexity: O(log n)
-    void insert(T key){ root = _insert(root, key); }
+    void insert(T key){
+        x = 0; // control for using _insert() as the main insert func.
+        root = _insert(root, key);
+        _size += (x==1);
+    }
 
     // Time Complexity: O(log n)
     avl_tree_node<T>* _insert(avl_tree_node<T> *node, T key) {
-        if(node == nullptr) return _size++, new avl_tree_node<T>(key, node_update);
+        if(node == nullptr) return x = 1, new avl_tree_node<T>(key, node_update);
 
         // deciding the direction to go down in.
         if(comp(key, node->value)) node->left = _insert(node->left, key);
@@ -297,6 +370,8 @@ struct avl_tree {
         return t;
     }
 
+    // NOTE: The two rank methods are not used throughout the code.
+
     // Time Complexity: O(log n)
     avl_tree_node<T> *node_by_rank(int r){
         if(_size == 0 || r < 1 || r > _size) return nullptr;
@@ -314,8 +389,21 @@ struct avl_tree {
         if(r < node->left->count + 1) return _get_rank(node->left, r - 1);
         return _get_rank(node->right, r - node->left->count - 1);
     }
-    /// TODO:
-    ///    - Split for avl trees.
+    // TODO:
+    //    - SPLIT AVL TREE
+    avl_tree<T> *split(avl_tree_node<T> * node){
+
+    }
+
+    avl_tree_node<T> _concat(avl_tree_node<T> * t1, avl_tree_node<T> * k, avl_tree_node<T> * t2){
+        if(k == nullptr) k = new avl_tree_node<T>(max_node(t1)), _delete(t1, k->value);
+        else if(t1 == nullptr) {
+            auto& key = k->value;
+            delete k; return _insert(t2, key);
+        } else if(t2 == nullptr) {
+
+        }
+    }
 
     // Time Complexity: O(1)
     int size() const { return _size; }

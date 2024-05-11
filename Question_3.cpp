@@ -27,6 +27,23 @@ typedef struct Record{
 } Record;
 
 
+typedef struct PriceNode {
+    int price;
+    avl_tree<Record> * records_tree;
+
+    PriceNode(int price) : price(price), records_tree(nullptr) {
+        records_tree = new avl_tree<Record>();
+    };
+
+    ~PriceNode(){
+        delete records_tree;
+    }
+
+    bool operator<(PriceNode& other){
+        return price < other.price;
+    }
+} PriceNode;
+
 /**---------------------- Helper functions -------------------------------**/
 
 void update(avl_tree_node<Record> * node){
@@ -35,8 +52,6 @@ void update(avl_tree_node<Record> * node){
     if(node->right != nullptr) max_price = node->right->value.price < node->value.price ? node->value : node->right->value;
     node->_max = max_price;
 }
-
-
 /**------------------------------- & -------------------------------------**/
 
 typedef struct SeriesElements {
@@ -77,13 +92,6 @@ typedef struct SeriesElements {
         return this->max_price;
     }
 } SeriesElements;
-
-
-typedef struct SeriesNode {
-
-
-
-} SeriesNode;
 
 
 
