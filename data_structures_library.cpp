@@ -21,75 +21,6 @@
 int max(int a, int b){ return a < b ? b : a; }
 
 
-/**------------------------- 2-3 Tree ------------------------------------**/
-
-template <typename T>
-struct node_2_3 {
-    T k1, k2;
-    node_2_3<T> *left, *mid, *right;
-    int n;
-};
-
-template <typename T>
-struct inout_data {
-    T mid_value;
-    node_2_3<T> * child;
-
-    inout_data(node_2_3<T> * child= nullptr, T m = {}) : child(child), mid_value(m) {}
-
-    inout_data(inout_data<T> &other){ child = other.child, mid_value = other.mid_value; }
-
-    inout_data<T>& operator = (inout_data<T> &other){
-        if(&other != this)
-            child = other.child, mid_value = other.mid_value;
-        return *this;
-    }
-};
-
-
-template <typename T>
-struct tree_2_3 {
-    int _size;
-    node_2_3<T> * root;
-
-    tree_2_3() : root(nullptr) {}
-
-    ~tree_2_3() {
-        if(root != nullptr) kill(root);
-    }
-
-    void kill(node_2_3<T> * node){
-        if(node == nullptr) return;
-        kill(node->left), kill(node->mid), kill(node->right);
-        delete node;
-    }
-
-    int is_rotation_possible(node_2_3<T> *p, node_2_3<T> *r){
-        if(p == r) return 0; // if r == root : no rotation
-        if(p->n == 1) { // parent is a two node
-            if(r->n == 0){
-                if(p->left == r && p->mid->n == 2) return 2;
-                if(p->mid == r && p->left->n == 2) return 1;
-            }else if (p->left->n == 2 && p->middle->n == 2) return (p->left == r) ? 1 : 2;
-            return 0;
-        }
-        if(r->n == 0){
-            if(p->left == r && p->mid->n == 2) return 2;
-            else if(p->mid == r) {
-                if(p->left->n == 2) return 1;
-                if(p->right->n == 2) return 2;
-            } else if(p->mid->n == 2) return 1;
-            return 0;
-        } if(p->left == r && p->mid->n == 1) return 1;
-        if(p->mid == r){
-            if(p->left->n == 1) return 2;
-            if(p->right->n == 1) return 1;
-            return 0;
-        }return 2 * (p->middle->n == 1);
-    } // https://github.com/harismuneer/2-3-Tree/blob/master/2-3%20Tree%20(Balanced%20Search%20Tree).cpp
-};
-
-
 /**------------------------- Dynamic Array -------------------------------**/
 
 template <typename T>
@@ -275,6 +206,28 @@ struct avl_tree {
         return node;
     }
 
+    avl_tree_node<T>* _do_rotations(avl_tree_node<T> *node, T key){
+        // same as insert but without inserting. updates the values and rotates in the search path of key. O(log n) time.
+        if(node == nullptr) return nullptr;
+
+        // deciding the direction to go down in.
+        if(comp(key, node->value)) node->left = _do_rotations(node->left, key);
+        else if (comp(node->value, key)) node->right = _do_rotations(node->right, key);
+        else return node;
+
+        // updating the node's values recursively through the search path and getting the balance factor.
+        node->update_values();
+        int bf = node->balance_factor();
+
+        // dealing with each case of balancing the search path.
+        if(bf > 1 && comp(key, node->left->value)) return node->right_rotate();
+        if(bf > 1 && comp(node->left->value, key)) return node->left = node->left->left_rotate(), node->right_rotate();
+        if(bf < -1 && comp(key, node->right->value)) return node->right = node->right->right_rotate(), node->left_rotate();
+        if(bf < -1 && comp(node->right->value, key)) return node->left_rotate();
+
+        return node;
+    }
+
     // Time Complexity: O(log n)
     avl_tree_node<T>* find(T key) {
         return _find(root, key);
@@ -389,20 +342,106 @@ struct avl_tree {
         if(r < node->left->count + 1) return _get_rank(node->left, r - 1);
         return _get_rank(node->right, r - node->left->count - 1);
     }
-    // TODO:
-    //    - SPLIT AVL TREE
-    avl_tree<T> *split(avl_tree_node<T> * node){
 
+    // Time Complexity: O(log n) { sigma(h_i - h_{i-1}) + O(log n) = h_n - h_1 + O(log n) = O(log n) }
+    avl_tree_node<T> *split(avl_tree_node<T> * node){
+        if(node == nullptr) return nullptr;
+        // splits away the tree of nodes right to 'node'.
+        int size = 2 * root->height + 4;
+        avl_tree_node<T> ** t1 = new avl_tree_node<T> * [size];
+        avl_tree_node<T> ** t2 = new avl_tree_node<T> * [size];
+        // 2 * possible size - 1 for subtree, 1 for split node (k).
+        // + 4 for padding
+        int t1len=0, t2len=0;
+
+        auto *curr = root;
+        while(curr != nullptr && curr != node){
+            if(comp(node->value, curr->value)){ // x <- curr
+                t2[t2len++] = curr;
+                t2[t2len++] = curr->right;
+                curr = curr->left;
+            } else if(comp(node->value, curr->value)){ // curr -> x
+                t1[t1len++] = curr;
+                t1[t1len++] = curr->left;
+                curr = curr->right;
+            }
+        }
+        if(curr == nullptr) {// if not found...
+            delete[] t1, t2;
+            return nullptr;
+        }
+        if(node->right != nullptr){
+            auto t = node->right;
+            while(t->left != nullptr) t = t->left;
+            t2[t2len++] = t;
+            if(t == node->right) t2[t2len++] = nullptr;
+            else t2[t2len++] = node->right;
+        }
+        t1[t1len++] = node, t1[t1len++] = node->left;
+
+        avl_tree_node<T> * root1 = nullptr, *root2 = nullptr;
+        for(int i = t1len-1; i >= 0; i-=2)
+            root1 = _concat(t1[i], t1[i-1], root1);
+        for(int i = t2len-1; i >= 0; i-=2)
+            root2 = _concat(t2[i], t2[i-1], root2);
+        this->root = root1;
+        delete[] t1, t2;
+
+        return root2;
     }
 
-    avl_tree_node<T> _concat(avl_tree_node<T> * t1, avl_tree_node<T> * k, avl_tree_node<T> * t2){
-        if(k == nullptr) k = new avl_tree_node<T>(max_node(t1)), _delete(t1, k->value);
-        else if(t1 == nullptr) {
-            auto& key = k->value;
-            delete k; return _insert(t2, key);
-        } else if(t2 == nullptr) {
-
+    // Time Complexity: O(|h2-h1| + 1), if all parameters are defined, if some are null which can happen O(1) times
+    //                  in the split algorithm, the function takes O(log n).
+    avl_tree_node<T> *_concat(avl_tree_node<T> * t1, avl_tree_node<T> * k, avl_tree_node<T> * t2){
+        // This function is implemented just like in the lectures, and were assuming t1 < k < t2.
+        if(t1 == nullptr || k == nullptr || t2 == nullptr) {
+            return _deal_with_concat_cases(t1, k, t2);
         }
+        if(t1->height > t2->height){
+            auto *curr = t1, *par = t1;
+            while(curr->height - t2->height > 1) par = curr, curr = curr->right;
+            par->right = k;
+            k->left = curr;
+            k->right = t2;
+            return _do_rotations(t1, curr->value);
+        }
+        auto *curr = t2, *par = t2;
+        while(curr->height - t1->height > 1) par = curr, curr = curr->left;
+        par->left = k;
+        k->left = t1;
+        k->right = curr;
+        return _do_rotations(t1, curr->value);
+    }
+
+    // Time Complexity: O(log n) worst case.
+    avl_tree_node<T> * _deal_with_concat_cases(avl_tree_node<T> * t1, avl_tree_node<T>* k, avl_tree_node<T>* t2){
+        if(t1 == nullptr){
+            if(t2 == nullptr) return k;
+            if(k == nullptr) return t2;
+            auto key = k->value;
+            delete k;
+            return _insert(t2, key);
+        }
+        if(t2 == nullptr) {
+            auto key = k->value;
+            delete k;
+            return _insert(t1, key);
+        }
+        if(k == nullptr) {
+            if(t1->height > 0) {
+                auto ma = new avl_tree_node<T>(max_node(t1)->value, node_update);
+                t1 = _delete(t1, ma->value);
+                return _concat(t1, ma, t2);
+            }
+            if(t2->height > 0){
+                auto mi = new avl_tree_node<T>(min_node(t2)->value, node_update);
+                t2 = _delete(t2, mi->value);
+                return _concat(t1, mi, t2);
+            }
+            // t1: 1 node, t2: 1 node
+            return t1->right = t2, t2->update_values(), t1->update_values(), t1;
+        }
+        return nullptr; // not possible, there must be one which is nullptr, because thats the entrance statement to the function.
     }
 
     // Time Complexity: O(1)
