@@ -166,26 +166,26 @@ typedef struct DataStructure {
 
 
         month_hits_subtrees = new avl_tree_node<Record> * [2 * tree1.root->height];
-        // inserting nodes in the path from lca to left_node that we turned left in
+        // inserting right path from lca to left_node
         auto it = lca;
         while(it != left_node) {
-            if(left_node->value < it->value){ // only left turned nodes are added
+            if(it->value < left_node->value){ // only right turned nodes
+                it = it->right;
+                month_hits_subtrees[amount_of_left_subtrees++] = it;
+            } else it = it->left;
+        }
+        if(month_hits_subtrees[amount_of_left_subtrees-1] != left_node) month_hits_subtrees[amount_of_left_subtrees++] = left_node;
+
+        // inserting left path from lca to right_node
+        it = lca;
+        amount_of_subtrees = amount_of_left_subtrees;
+        while(it != right_node) {
+            if(right_node->value < it->value){ // only left turned nodes
                 it = it->left;
                 month_hits_subtrees[amount_of_left_subtrees++] = it;
             } else it = it->right;
         }
-        if(month_hits_subtrees[amount_of_left_subtrees-1] != left_node) month_hits_subtrees[amount_of_left_subtrees++] = left_node;
-
-        // inserting nodes in the path from lca to right_node that we turned right in
-        amount_of_subtrees = amount_of_left_subtrees;
-        it = lca;
-        while(it != right_node) {
-            if(right_node->value < it->value){ // only left turned nodes are added
-                it = it->right;
-                month_hits_subtrees[amount_of_subtrees++] = it;
-            } else it = it->left;
-        }
-        if(month_hits_subtrees[amount_of_subtrees-1] != right_node) month_hits_subtrees[amount_of_subtrees++] = right_node;
+        if(month_hits_subtrees[amount_of_left_subtrees-1] != right_node) month_hits_subtrees[amount_of_subtrees++] = right_node;
 
     }
 
@@ -200,7 +200,7 @@ typedef struct DataStructure {
         std::cout << "Month Hits: \n";
         for(int i = amount_of_left_subtrees-1; i >= 0; i--)
             std::cout << month_hits_subtrees[i]->value.name << " ", inorder_print(month_hits_subtrees[i]->right);
-        for(int i = amount_of_left_subtrees; i < amount_of_subtrees; i--)
+        for(int i = amount_of_subtrees-1; i >= amount_of_subtrees; i--)
             std::cout << month_hits_subtrees[i]->value.name << " ", inorder_print(month_hits_subtrees[i]->left);
     }
 

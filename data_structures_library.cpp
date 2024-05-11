@@ -16,78 +16,9 @@
                 D  A  T  A      S  T  R  U  C  T  U  R  E  S
 ****************************************************************************/
 
-/**------------------------- Helper Functions ----------------------------**/
+/**------------------------- Helper Functions -----------------------------**/
 // Time Complexity: O(1)
 int max(int a, int b){ return a < b ? b : a; }
-
-
-/**------------------------- 2-3 Tree ------------------------------------**/
-
-template <typename T>
-struct node_2_3 {
-    T k1, k2;
-    node_2_3<T> *left, *mid, *right;
-    int n;
-};
-
-template <typename T>
-struct inout_data {
-    T mid_value;
-    node_2_3<T> * child;
-
-    inout_data(node_2_3<T> * child= nullptr, T m = {}) : child(child), mid_value(m) {}
-
-    inout_data(inout_data<T> &other){ child = other.child, mid_value = other.mid_value; }
-
-    inout_data<T>& operator = (inout_data<T> &other){
-        if(&other != this)
-            child = other.child, mid_value = other.mid_value;
-        return *this;
-    }
-};
-
-
-template <typename T>
-struct tree_2_3 {
-    int _size;
-    node_2_3<T> * root;
-
-    tree_2_3() : root(nullptr) {}
-
-    ~tree_2_3() {
-        if(root != nullptr) kill(root);
-    }
-
-    void kill(node_2_3<T> * node){
-        if(node == nullptr) return;
-        kill(node->left), kill(node->mid), kill(node->right);
-        delete node;
-    }
-
-    int is_rotation_possible(node_2_3<T> *p, node_2_3<T> *r){
-        if(p == r) return 0; // if r == root : no rotation
-        if(p->n == 1) { // parent is a two node
-            if(r->n == 0){
-                if(p->left == r && p->mid->n == 2) return 2;
-                if(p->mid == r && p->left->n == 2) return 1;
-            }else if (p->left->n == 2 && p->middle->n == 2) return (p->left == r) ? 1 : 2;
-            return 0;
-        }
-        if(r->n == 0){
-            if(p->left == r && p->mid->n == 2) return 2;
-            else if(p->mid == r) {
-                if(p->left->n == 2) return 1;
-                if(p->right->n == 2) return 2;
-            } else if(p->mid->n == 2) return 1;
-            return 0;
-        } if(p->left == r && p->mid->n == 1) return 1;
-        if(p->mid == r){
-            if(p->left->n == 1) return 2;
-            if(p->right->n == 1) return 1;
-            return 0;
-        }return 2 * (p->middle->n == 1);
-    } // https://github.com/harismuneer/2-3-Tree/blob/master/2-3%20Tree%20(Balanced%20Search%20Tree).cpp
-};
 
 
 /**------------------------- Dynamic Array -------------------------------**/
@@ -366,8 +297,6 @@ struct avl_tree {
         return t;
     }
 
-    // NOTE: The two rank methods are not used throughout the code.
-
     // Time Complexity: O(log n)
     avl_tree_node<T> *node_by_rank(int r){
         if(_size == 0 || r < 1 || r > _size) return nullptr;
@@ -385,6 +314,8 @@ struct avl_tree {
         if(r < node->left->count + 1) return _get_rank(node->left, r - 1);
         return _get_rank(node->right, r - node->left->count - 1);
     }
+    /// TODO:
+    ///    - Split for avl trees.
 
     // Time Complexity: O(1)
     int size() const { return _size; }
