@@ -24,6 +24,11 @@ typedef struct Record{
     bool operator<(Record& other){
         return serial_number < other.serial_number;
     }
+    friend std::ostream& operator<<(std::ostream& os, Record& r){
+        os << "Record: \nserial number: " << r.serial_number
+           << " price: " << r.price << " name: " << r.name;
+        return os;
+    }
 } Record;
 
 
@@ -58,12 +63,6 @@ void update(avl_tree_node<Record> * node){
 /**------------------------------- & -------------------------------------**/
 
 typedef struct SeriesElements {
-    /**
-     * Since the data structure from question 1 is helpful here, were just going to copy the code from there
-     *    Please note that there were two solutions for q1, the one we did, and the one presented here,
-     *      where instead of maintaining a price avl tree, we maintain a max per each subtree and save code.
-     *
-    **/
 
     avl_tree<Record> tree1{&update};
     Record max_price = {-1, -1, ""};

@@ -1,4 +1,4 @@
-C:/Users/omega/CLionProjects/TR3/cmake-build-debug/CMakeFiles/Q12.dir
-C:/Users/omega/CLionProjects/TR3/cmake-build-debug/CMakeFiles/Q3.dir
-C:/Users/omega/CLionProjects/TR3/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/omega/CLionProjects/TR3/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/tomer/CLionProjects/b3/cmake-build-debug/CMakeFiles/Q12.dir
+C:/Users/tomer/CLionProjects/b3/cmake-build-debug/CMakeFiles/Q3.dir
+C:/Users/tomer/CLionProjects/b3/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/tomer/CLionProjects/b3/cmake-build-debug/CMakeFiles/rebuild_cache.dir

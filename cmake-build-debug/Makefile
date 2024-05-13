@@ -56,10 +56,10 @@ RM = "C:\Program Files\JetBrains\CLion 2023.2.2\bin\cmake\win\x64\bin\cmake.exe"
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\tomer\CLionProjects\T3
+CMAKE_SOURCE_DIR = C:\Users\tomer\CLionProjects\b3
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\tomer\CLionProjects\T3\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\tomer\CLionProjects\b3\cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -86,9 +86,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\tomer\CLionProjects\T3\cmake-build-debug\CMakeFiles C:\Users\tomer\CLionProjects\T3\cmake-build-debug\\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\tomer\CLionProjects\b3\cmake-build-debug\CMakeFiles C:\Users\tomer\CLionProjects\b3\cmake-build-debug\\CMakeFiles\progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\tomer\CLionProjects\T3\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\tomer\CLionProjects\b3\cmake-build-debug\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -116,24 +116,37 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named TR3
+# Target rules for targets named Q12
 
 # Build rule for target.
-TR3: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 TR3
-.PHONY : TR3
+Q12: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 Q12
+.PHONY : Q12
 
 # fast build rule for target.
-TR3/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\TR3.dir\build.make CMakeFiles/TR3.dir/build
-.PHONY : TR3/fast
+Q12/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Q12.dir\build.make CMakeFiles/Q12.dir/build
+.PHONY : Q12/fast
+
+#=============================================================================
+# Target rules for targets named Q3
+
+# Build rule for target.
+Q3: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 Q3
+.PHONY : Q3
+
+# fast build rule for target.
+Q3/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Q3.dir\build.make CMakeFiles/Q3.dir/build
+.PHONY : Q3/fast
 
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
 # target to build an object file
 main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\TR3.dir\build.make CMakeFiles/TR3.dir/main.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Q12.dir\build.make CMakeFiles/Q12.dir/main.cpp.obj
 .PHONY : main.cpp.obj
 
 main.i: main.cpp.i
@@ -141,7 +154,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\TR3.dir\build.make CMakeFiles/TR3.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Q12.dir\build.make CMakeFiles/Q12.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -149,8 +162,32 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\TR3.dir\build.make CMakeFiles/TR3.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Q12.dir\build.make CMakeFiles/Q12.dir/main.cpp.s
 .PHONY : main.cpp.s
+
+main2.obj: main2.cpp.obj
+.PHONY : main2.obj
+
+# target to build an object file
+main2.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Q3.dir\build.make CMakeFiles/Q3.dir/main2.cpp.obj
+.PHONY : main2.cpp.obj
+
+main2.i: main2.cpp.i
+.PHONY : main2.i
+
+# target to preprocess a source file
+main2.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Q3.dir\build.make CMakeFiles/Q3.dir/main2.cpp.i
+.PHONY : main2.cpp.i
+
+main2.s: main2.cpp.s
+.PHONY : main2.s
+
+# target to generate assembly for a file
+main2.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Q3.dir\build.make CMakeFiles/Q3.dir/main2.cpp.s
+.PHONY : main2.cpp.s
 
 # Help Target
 help:
@@ -160,10 +197,14 @@ help:
 	@echo ... depend
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... TR3
+	@echo ... Q12
+	@echo ... Q3
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... main2.obj
+	@echo ... main2.i
+	@echo ... main2.s
 .PHONY : help
 
 

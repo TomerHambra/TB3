@@ -229,17 +229,17 @@ struct avl_tree {
     }
 
     // Time Complexity: O(log n)
-    avl_tree_node<T>* find(T key) {
+    avl_tree_node<T>* find(T key) const {
         return _find(root, key);
     }
 
     // Time Complexity: O(log n)
-    avl_tree_node<T>* _find(avl_tree_node<T> * node, T key) {
+    avl_tree_node<T>* _find(avl_tree_node<T> * node, T key) const {
         if(node == nullptr) return nullptr;
 
-        if(comp(key, node->value)) node->left = _find(node->left, key);
-        else if (comp(node->value, key)) node->right = _find(node->right, key);
-        else return node;
+        if(comp(key, node->value)) return _find(node->left, key);
+        if (comp(node->value, key)) return _find(node->right, key);
+        return node;
     }
 
     // Time Complexity: O(log n)
