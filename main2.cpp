@@ -10,8 +10,10 @@ void _inorder_print(avl_tree_node<Record> * node){
 
 //TODO: Problems:
 //    rank is not done properly, j = 4 yields third         -fixed
-//    split is done without order apparently
+//    split is done without order apparently                -maybe fixed??
 //    max is not updated correctly                          -fixed
+//    problem with the max system?                          -fixed
+
 int main(){
     DataStructure ds;
     std::vector<std::string> names = {
@@ -28,7 +30,8 @@ int main(){
     std::cout << "\nMax Price: " << ma << "\n\n\n";
     ds.Split_Series(1, 4);
     _inorder_print(ds.series[0]->tree1.root);
-    std::cout << "\n\n\n";
+    auto r = ds.Max(1);
+    std::cout << "\n\n\n" << r<< " \n\n\n";
     _inorder_print(ds.series[1]->tree1.root);
     ma = ds.Max();
     std::cout << "\nTotal Max Price: " << ma << "\n";

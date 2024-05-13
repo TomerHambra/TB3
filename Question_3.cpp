@@ -54,8 +54,8 @@ typedef struct PriceNode {
 
 void update(avl_tree_node<Record> * node){
     auto max_price = node->value;
-    if(node->left != nullptr) max_price = node->left->_max.price < node->_max.price ? node->_max : node->left->_max;
-    if(node->right != nullptr) max_price = node->right->_max.price < node->_max.price ? node->_max : node->right->_max;
+    if(node->left != nullptr) max_price = node->left->_max.price < max_price.price ? max_price : node->left->_max;
+    if(node->right != nullptr) max_price = node->right->_max.price < max_price.price ? max_price : node->right->_max;
     node->_max = max_price;
 }
 
@@ -100,6 +100,7 @@ typedef struct SeriesElements {
     }
 
     Record Max_Price() {
+        max_price = this->tree1.root->_max;
         if(max_price.serial_number == -1)
             std::cout << "No elements in the data structure, so default max_price is returned." << std::endl;
         return this->max_price;
@@ -164,6 +165,8 @@ typedef struct DataStructure {
         auto node = series[i-1]->tree1.node_by_rank(j);
         auto root2 = series[i-1]->tree1.split(node);
         series.insert_last(new SeriesElements(root2));
+        series[i-1]->max_price = series[i-1]->tree1.root->_max;
+        series.last()->max_price = series.last()->tree1.root->_max;
     }
 
     Record Max() { // Bonus  :)

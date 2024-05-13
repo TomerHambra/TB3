@@ -52,12 +52,16 @@ struct dynamic_array {
     // Time Complexity: O(1)
     void remove_last(){
         if(_size == 0) return;
-        return array[_size--];
+        return array[_size--], void();
     }
 
     // Time Complexity: O(1)
     T& operator[](int idx) {
         return array[idx];
+    }
+
+    T& last(){
+        return array[_size-1];
     }
 
     // Time Complexity: O(1)
@@ -398,19 +402,23 @@ struct avl_tree {
             return _deal_with_concat_cases(t1, k, t2);
         }
         if(t1->height > t2->height){
-            auto *curr = t1, *par = t1;
+            auto *curr = t1, *par = t1, *rot = t1;
             while(curr->height - t2->height > 1) par = curr, curr = curr->right;
-            par->right = k;
+            if(curr != par)  // if found y != root(t1)
+                par->right = k;
+            else rot = k;
             k->left = curr;
             k->right = t2;
-            return _do_rotations(t1, curr->value);
+            return _do_rotations(rot, curr->value);
         }
-        auto *curr = t2, *par = t2;
+        auto *curr = t2, *par = t2, *rot = t2;
         while(curr->height - t1->height > 1) par = curr, curr = curr->left;
-        par->left = k;
+        if(curr != par)  // if found y != root(t2)
+            par->left = k;
+        else rot = k;
         k->left = t1;
         k->right = curr;
-        return _do_rotations(t1, curr->value);
+        return _do_rotations(rot, curr->value);
     }
 
     // Time Complexity: O(log n) worst case.
