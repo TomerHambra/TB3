@@ -1,5 +1,4 @@
 #include <iostream>
-
 /****************************************************************************
                     I  N  F  O  R  M  A  T  I  O  N
 
@@ -31,7 +30,7 @@ struct dynamic_array {
 
 
     // Time Complexity: O(1)
-    dynamic_array(int array_size=8) : _size(0), array_size(array_size), array(new T[array_size]) {};
+    explicit dynamic_array(int array_size=8) : _size(0), array_size(array_size), array(new T[array_size]) {};
 
     // Time Complexity: O(1)
     ~dynamic_array(){ delete [] this->array; }
@@ -99,7 +98,7 @@ struct avl_tree_node {
 
     // Time Complexity: O(1)
     avl_tree_node(T value, void (*update)(avl_tree_node<T> *) = &none) : value(value), left(nullptr), right(nullptr), count(1),
-            update(update), height(1), _max({}) {};
+            update(update), height(1), _max(value) {};
 
     // Time Complexity: O(1)
     void update_values() {
@@ -236,9 +235,9 @@ struct avl_tree {
     // Time Complexity: O(log n)
     avl_tree_node<T>* _find(avl_tree_node<T> * node, T key) const {
         if(node == nullptr) return nullptr;
-
-        if(comp(key, node->value)) return _find(node->left, key);
-        if (comp(node->value, key)) return _find(node->right, key);
+        // finds the node if exists, else finds it's parent
+        if(comp(key, node->value)) return node->left ? _find(node->left, key) : node;
+        if(comp(node->value, key)) return node->right ? _find(node->right, key) : node;
         return node;
     }
 
@@ -261,11 +260,11 @@ struct avl_tree {
                 _size--;
             }else {
                 avl_tree_node<T> *temp = min_node(node->right);
-                root->value = temp->value; // copying just the key, not the other fields.
-                root->right = _delete(node->right, temp->value);
+                node->value = temp->value; // copying just the key, not the other fields.
+                node->right = _delete(node->right, temp->value);
             }
         }
-        if(node == nullptr) return node;
+        if(node == nullptr) return nullptr;
 
         // updating the values and calculating the balance factor bf.
         node->update_values();
@@ -276,6 +275,7 @@ struct avl_tree {
         if(bf > 1 && node->left->balance_factor() < 0) return node->left = node->left->left_rotate(), node->right_rotate();
         if(bf < -1 && node->right->balance_factor() > 0) return node->right = node->right->right_rotate(), node->left_rotate();
         if(bf < -1 && node->right->balance_factor() <= 0) return node->left_rotate();
+        return node; // no balancing needed...
     }
 
     // Time Complexity: O(log n) where n is node.count or the number of elements in node's subtree
@@ -339,7 +339,7 @@ struct avl_tree {
             return _get_rank(node->right, r - 1);
         }
         if(r == node->left->count + 1) return node;
-        if(r < node->left->count + 1) return _get_rank(node->left, r - 1);
+        if(r < node->left->count + 1) return _get_rank(node->left, r);
         return _get_rank(node->right, r - node->left->count - 1);
     }
 
@@ -348,8 +348,8 @@ struct avl_tree {
         if(node == nullptr) return nullptr;
         // splits away the tree of nodes right to 'node'.
         int size = 2 * root->height + 4;
-        avl_tree_node<T> ** t1 = new avl_tree_node<T> * [size];
-        avl_tree_node<T> ** t2 = new avl_tree_node<T> * [size];
+        auto ** t1 = new avl_tree_node<T> * [size];
+        auto ** t2 = new avl_tree_node<T> * [size];
         // 2 * possible size - 1 for subtree, 1 for split node (k).
         // + 4 for padding
         int t1len=0, t2len=0;
@@ -360,7 +360,7 @@ struct avl_tree {
                 t2[t2len++] = curr;
                 t2[t2len++] = curr->right;
                 curr = curr->left;
-            } else if(comp(node->value, curr->value)){ // curr -> x
+            } else { // curr -> x
                 t1[t1len++] = curr;
                 t1[t1len++] = curr->left;
                 curr = curr->right;
@@ -441,7 +441,7 @@ struct avl_tree {
             // t1: 1 node, t2: 1 node
             return t1->right = t2, t2->update_values(), t1->update_values(), t1;
         }
-        return nullptr; // not possible, there must be one which is nullptr, because thats the entrance statement to the function.
+        return nullptr; // not possible, there must be one which is nullptr, because that's the entrance statement to the function.
     }
 
     // Time Complexity: O(1)

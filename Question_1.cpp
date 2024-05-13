@@ -51,11 +51,10 @@ typedef struct PriceNode {
 
 void update(avl_tree_node<Record> * node){
     auto max_price = node->value;
-    if(node->left != nullptr) max_price = node->left->value.price < node->value.price ? node->value : node->left->value;
-    if(node->right != nullptr) max_price = node->right->value.price < node->value.price ? node->value : node->right->value;
+    if(node->left != nullptr) max_price = node->left->_max.price < node->_max.price ? node->_max : node->left->_max;
+    if(node->right != nullptr) max_price = node->right->_max.price < node->_max.price ? node->_max : node->right->_max;
     node->_max = max_price;
 }
-
 
 
 /****************************************************************************

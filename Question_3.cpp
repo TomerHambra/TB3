@@ -54,11 +54,10 @@ typedef struct PriceNode {
 
 void update(avl_tree_node<Record> * node){
     auto max_price = node->value;
-    if(node->left != nullptr) max_price = node->left->value.price < node->value.price ? node->value : node->left->value;
-    if(node->right != nullptr) max_price = node->right->value.price < node->value.price ? node->value : node->right->value;
+    if(node->left != nullptr) max_price = node->left->_max.price < node->_max.price ? node->_max : node->left->_max;
+    if(node->right != nullptr) max_price = node->right->_max.price < node->_max.price ? node->_max : node->right->_max;
     node->_max = max_price;
 }
-
 
 /**------------------------------- & -------------------------------------**/
 
@@ -124,7 +123,7 @@ typedef struct DataStructure {
      *      ordered by serial number, and has all the functionalities of the DataStructure from Question_1.cpp.
      *      With that, we will also keep an avl tree including all records and updates the max price in subtree,
      *      and a field 'last_serial_number' which holds the current last_serial_number.
-     *      A proof for the Time complexity of the function 'Split_Series(i, j)'
+     *      A proof for the Time complexity of the function 'Split_Series(i, j)' will be provided under the function declaration.
      */
 
     dynamic_array<SeriesElements * > series;
@@ -144,26 +143,26 @@ typedef struct DataStructure {
 
     void Insert(int price, std::string name, int i){
         if(i < 1 || series.size() < i) return; // protecting from segfaults due to array out of index.
-        series[i]->Insert(last_serial_number++, price, name);
-        all_records.insert({last_serial_number, price, name});
+        series[i-1]->Insert(last_serial_number, price, name);
+        all_records.insert({last_serial_number++, price, name});
     }
 
     void Delete(int number, int i) {
         if(i < 1 || series.size() < i) return; // protecting from segfaults due to array out of index.
-        auto rec = series[i]->Delete(number);
+        auto rec = series[i-1]->Delete(number);
         all_records.remove(rec);
     }
 
     Record Max(int i){
         if(i < 1 || series.size() < i) return {-1, -1, ""}; // protecting from segfaults due to array out of index.
-        return series[i]->Max_Price();
+        return series[i-1]->Max_Price();
     }
 
     void Split_Series(int i, int j){
         if(i < 1 || series.size() < i) return; // protecting from segfaults due to array out of index.
-        if(series[i]->tree1.size()< 2) return; // important for clarifying the proof.
-        auto node = series[i]->tree1.node_by_rank(j);
-        auto root2 = series[i]->tree1.split(node);
+        if(series[i-1]->tree1.size()< 2) return; // important for clarifying the proof.
+        auto node = series[i-1]->tree1.node_by_rank(j);
+        auto root2 = series[i-1]->tree1.split(node);
         series.insert_last(new SeriesElements(root2));
     }
 

@@ -60,8 +60,8 @@ typedef struct PriceNode {
 
 void update(avl_tree_node<Record> * node){
     auto max_price = node->value;
-    if(node->left != nullptr) max_price = node->left->value.price < node->value.price ? node->value : node->left->value;
-    if(node->right != nullptr) max_price = node->right->value.price < node->value.price ? node->value : node->right->value;
+    if(node->left != nullptr) max_price = node->left->_max.price < node->_max.price ? node->_max : node->left->_max;
+    if(node->right != nullptr) max_price = node->right->_max.price < node->_max.price ? node->_max : node->right->_max;
     node->_max = max_price;
 }
 
@@ -127,7 +127,7 @@ typedef struct DataStructure {
          *          paths, and in an avl tree this is O(log n). iterating over the paths from the lca to both nodes is also
          *          at most 2 * |search path| which is also O(log n). Overall, this sums up to be O(log n).
          */
-        if(j > i) {
+        if(i > j) {
             int t = i;
             i = j, j = t;
         }
@@ -136,28 +136,30 @@ typedef struct DataStructure {
         auto left_node = tree1.find(dummy1), right_node = tree1.find(dummy2);
         auto lca = tree1.lca(left_node, right_node);
 
-
+        // TODO: REVERSE sides from only right to only left and vise versa
         month_hits_subtrees = new avl_tree_node<Record> * [2 * tree1.root->height + 2];
         // inserting right path from lca to left_node
-        auto it = lca;
-        while(it != left_node) {
-            if(it->value < left_node->value){ // only right turned nodes
-                it = it->right;
+        auto it = lca->left;
+        while(it != nullptr && it != left_node) {
+            if(left_node->value < it->value){ // only left turned nodes
                 month_hits_subtrees[amount_of_left_subtrees++] = it;
-            } else it = it->left;
-        }
-        if(month_hits_subtrees[amount_of_left_subtrees-1] != left_node) month_hits_subtrees[amount_of_left_subtrees++] = left_node;
-
-        // inserting left path from lca to right_node
-        it = lca;
-        amount_of_subtrees = amount_of_left_subtrees;
-        while(it != right_node) {
-            if(right_node->value < it->value){ // only left turned nodes
                 it = it->left;
-                month_hits_subtrees[amount_of_left_subtrees++] = it;
             } else it = it->right;
         }
-        if(month_hits_subtrees[amount_of_left_subtrees-1] != right_node) month_hits_subtrees[amount_of_subtrees++] = right_node;
+        if(amount_of_left_subtrees == 0 || month_hits_subtrees[amount_of_left_subtrees-1] != left_node)
+            month_hits_subtrees[amount_of_left_subtrees++] = left_node;
+
+        // inserting left path from lca to right_node
+        it = lca->right;
+        amount_of_subtrees = amount_of_left_subtrees;
+        while(it != nullptr && it != right_node) {
+            if(it->value < right_node->value){ // only right turned nodes
+                month_hits_subtrees[amount_of_subtrees++] = it;
+                it = it->right;
+            } else it = it->left;
+        }
+        if(amount_of_subtrees == amount_of_left_subtrees || month_hits_subtrees[amount_of_subtrees-1] != right_node)
+            month_hits_subtrees[amount_of_subtrees++] = right_node;
         month_hits_subtrees[amount_of_subtrees] = lca;
     }
 
@@ -173,8 +175,8 @@ typedef struct DataStructure {
         for(int i = amount_of_left_subtrees-1; i >= 0; i--)
             std::cout << month_hits_subtrees[i]->value.name << " ", _inorder_print(month_hits_subtrees[i]->right);
         std::cout << month_hits_subtrees[amount_of_subtrees]->value.name << " ";
-        for(int i = amount_of_subtrees-1; i >= amount_of_subtrees; i--)
-            std::cout << month_hits_subtrees[i]->value.name << " ", _inorder_print(month_hits_subtrees[i]->left);
+        for(int i = amount_of_left_subtrees; i < amount_of_subtrees; i++)
+            _inorder_print(month_hits_subtrees[i]->left), std::cout << month_hits_subtrees[i]->value.name << " ";
     }
 
     void _inorder_print(avl_tree_node<Record> * node){
