@@ -1,18 +1,24 @@
 #include "Question_3.cpp"
 #include <vector>
 
+/****************************************************************************
+                    I  N  F  O  R  M  A  T  I  O  N
+
+        Lia Bercovitz - 328381926
+        Tomer Hambra - 216634758
+
+        Due Date - 7.5.24
+        Submitted to Jonatan Sperber
+****************************************************************************/
+
+// Test for Q3
+
 void _inorder_print(avl_tree_node<Record> * node){
     if(node == nullptr) return;
     _inorder_print(node->left);
     std::cout << node->value << " " << node->height << "\n";
     _inorder_print(node->right);
 }
-
-//TODO: Problems:
-//    rank is not done properly, j = 4 yields third         -fixed
-//    split is done without order apparently                -maybe fixed??
-//    max is not updated correctly                          -fixed
-//    problem with the max system?                          -fixed
 
 int main(){
     DataStructure ds;
