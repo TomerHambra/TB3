@@ -45,6 +45,7 @@ struct dynamic_array {
             array = new T[array_size];
             for(int i = 0; i < _size; i++)
                 array[i] = temp[i];
+            delete[] temp;
         } _size++;
         array[_size - 1] = value;
     }

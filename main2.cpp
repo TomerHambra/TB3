@@ -28,7 +28,7 @@ int main(){
     _inorder_print(ds.series[0]->tree1.root);
     auto ma = ds.Max(1);
     std::cout << "\nMax Price: " << ma << "\n\n\n";
-    ds.Split_Series(1, 4);
+    ds.Split_Series(1, 5);
     _inorder_print(ds.series[0]->tree1.root);
     auto r = ds.Max(1);
     std::cout << "\n\n\n" << r<< " \n\n\n";

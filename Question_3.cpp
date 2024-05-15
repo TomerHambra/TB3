@@ -32,24 +32,6 @@ typedef struct Record{
 } Record;
 
 
-typedef struct PriceNode {
-    int price;
-    avl_tree<Record> * records_tree;
-
-    PriceNode(int price) : price(price), records_tree(nullptr) {
-        records_tree = new avl_tree<Record>();
-    };
-
-    ~PriceNode(){
-        delete records_tree;
-    }
-
-    bool operator<(PriceNode& other){
-        return price < other.price;
-    }
-} PriceNode;
-
-
 /**---------------------- Helper functions -------------------------------**/
 
 void update(avl_tree_node<Record> * node){

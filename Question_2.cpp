@@ -40,23 +40,6 @@ typedef struct Record{
 } Record;
 
 
-typedef struct PriceNode {
-    int price;
-    avl_tree<Record> * records_tree;
-
-    explicit PriceNode(int price) : price(price), records_tree(nullptr) {
-        records_tree = new avl_tree<Record>();
-    };
-
-    ~PriceNode(){
-        delete records_tree;
-    }
-
-    bool operator<(PriceNode& other) const {
-        return price < other.price;
-    }
-} PriceNode;
-
 
 void update(avl_tree_node<Record> * node){
     auto max_price = node->value;
@@ -191,7 +174,7 @@ typedef struct DataStructure {
          *      The function frees the memory of the array, and resets the sizes.
          *      Time Complexity: O(1), because freeing an array is O(1) (as shown in lectures).
          */
-        delete month_hits_subtrees;
+        delete[] month_hits_subtrees;
         amount_of_left_subtrees = 0, amount_of_subtrees = 0;
     }
 
