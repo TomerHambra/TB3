@@ -44,6 +44,7 @@ void update(avl_tree_node<Record> * node){
 /**------------------------------- & -------------------------------------**/
 
 typedef struct SeriesElements {
+    // This is essentially the same code as Question 1 besides the serial number bit brought out.
 
     avl_tree<Record> tree1{&update};
     Record max_price = {-1, -1, ""};
@@ -106,41 +107,56 @@ typedef struct DataStructure {
      *      ordered by serial number, and has all the functionalities of the DataStructure from Question_1.cpp.
      *      With that, we will also keep an avl tree including all records and updates the max price in subtree,
      *      and a field 'last_serial_number' which holds the current last_serial_number.
-     *      A proof for the Time complexity of the function 'Split_Series(i, j)' will be provided under the function declaration.
+     *      A further Complexity Analysis for the Time complexity of the function 'Split_Series(i, j)' will be provided
+     *      above the function declaration.
      */
 
     dynamic_array<SeriesElements * > series;
     avl_tree<Record> all_records{&update};
     int last_serial_number;
 
-    // This functions as the Init()
+    // This functions as the Init() simply because there is no reason to do a separate Init function...
+    // Time Complexity: O(1)
     DataStructure() {
         last_serial_number = 1;
         series.insert_last(new SeriesElements());
     }
 
+    // Time complexity: O(n)
     ~DataStructure(){
         for(int i = 0; i < series.size(); i++)
             delete series[i];
     }
 
+    // Time Complexity: O(log n)
     void Insert(int price, std::string name, int i){
         if(i < 1 || series.size() < i) return; // protecting from segfaults due to array out of index.
         series[i-1]->Insert(last_serial_number, price, name);
         all_records.insert({last_serial_number++, price, name});
     }
 
+    // Time Complexity: O(log n)
     void Delete(int number, int i) {
         if(i < 1 || series.size() < i) return; // protecting from segfaults due to array out of index.
         auto rec = series[i-1]->Delete(number);
         all_records.remove(rec);
     }
 
+    // Time Complexity: O(1)
     Record Max(int i){
         if(i < 1 || series.size() < i) return {-1, -1, ""}; // protecting from segfaults due to array out of index.
         return series[i-1]->Max_Price();
     }
 
+    /*
+     * Complexity Analysis:
+     *      The time complexity of the split algorithm is O(log n) as shown in lectures. Let c be an integer s.t.
+     *      T(Split_Series) <= c * (log n) for all n greater than some integer N. If we use the accounting method, we
+     *      will see that the Insert() method 'pays' for the Split_Series() Method, if we expand its constant by c.
+     *      Overall we get that the accounting method yields a complexity of O(1) amortized for this function (since the
+     *      amount of splits is bounded by n, the amount of elements).
+     */
+    // Time Complexity: O(log n), but O(1) amortized
     void Split_Series(int i, int j){
         if(i < 1 || series.size() < i) return; // protecting from segfaults due to array out of index.
         if(series[i-1]->tree1.size()< 2) return; // important for clarifying the proof.
@@ -151,6 +167,7 @@ typedef struct DataStructure {
         series.last()->max_price = series.last()->tree1.root->_max;
     }
 
+    // Time Complexity: O(1)
     Record Max() { // Bonus  :)
         auto ma = all_records.root->_max;
         if(ma.serial_number == -1)

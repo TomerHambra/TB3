@@ -50,7 +50,13 @@ void update(avl_tree_node<Record> * node){
 typedef struct DataStructure {
     /*
      * Solution:
-     *
+     *      We will use an avl tree of Records, where a record is a struct holding a serial number, a name, and a price.
+     *      The avl tree is ordered by serial number, and each node holds a field called _max. This field is updated
+     *      alongside the height and count fields, and it holds the record which has the maximum price in that node’s
+     *      subtree (i.e. root->_max is the max price record in the entire tree). The reason this works is that when we
+     *      insert a record which is bound to be the next max_price, this field only updates in that new node's search
+     *      path, and since then we can just update it in the back side of the recursion of insert. In this way
+     *      insertion, deletion and max_price become trivial, since they are straight from the lectures or just accessing a field.
      */
 
     avl_tree<Record> tree1{&update};
@@ -60,17 +66,21 @@ typedef struct DataStructure {
     DataStructure() = default;
     ~DataStructure() = default;
 
-    void Init(){
+    // Time Complexity: O(1)
+    void Init() {
         max_price = {-1, -1, ""};
     }
 
-    void Insert(int price, std::string name){
+    // Time Complexity: O(log n)
+    void Insert(int price, std::string name) {
         Record record = {last_serial_number++, price, name};
         tree1.insert(record);
         max_price = tree1.root->_max;
     }
 
-    Record Delete(int number){ // changed the return value to the Record details we just deleted.
+    // Time Complexity: O(log n)
+    Record Delete(int number) {
+        // changed the return value to the Record details we just deleted.
         // keep in mind that the search is done only using the serial number
         Record dummy = {number, -1, ""};
         auto temp = tree1.find(dummy);
@@ -83,6 +93,7 @@ typedef struct DataStructure {
         return record;
     }
 
+    // Time Complexity: O(1)
     Record Max_Price() {
         if(max_price.serial_number == -1)
             std::cout << "No elements in the data structure, so default max_price is returned." << std::endl;

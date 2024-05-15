@@ -304,8 +304,8 @@ struct avl_tree {
 
     // Time Complexity: O(log n) where n is node.count or the number of elements in node's subtree
     avl_tree_node<T> * min_node(avl_tree_node<T> *node){
-        if(node == nullptr) return node;
         // returns the minimum value node in node's subtree.
+        if(node == nullptr) return node;
         while(node->left != nullptr) node = node->left;
         return node;
     }
@@ -321,8 +321,8 @@ struct avl_tree {
 
     // Time Complexity: O(log n) where n is node.count or the number of elements in node's subtree
     avl_tree_node<T> * max_node(avl_tree_node<T> *node){
-        if(node == nullptr) return node;
         // returns the maximum value node in node's subtree.
+        if(node == nullptr) return node;
         while(node->right != nullptr) node = node->right;
         return node;
     }
@@ -351,12 +351,14 @@ struct avl_tree {
 
     // Time Complexity: O(log n)
     avl_tree_node<T> *node_by_rank(int r){
+        // finds the node with rank r.
         if(_size == 0 || r < 1 || r > _size) return nullptr;
         return _get_rank(root, r);
     }
 
     // Time Complexity: O(log n)
     avl_tree_node<T> *_get_rank(avl_tree_node<T> *node, int r){
+        // a utility function for node_by_rank, which recursively returns the node with rank r as shown in lectures.
         if(node == nullptr) return nullptr;
         if(node->left == nullptr) {
             if(r == 1) return node;
@@ -369,8 +371,8 @@ struct avl_tree {
 
     // Time Complexity: O(log n) { sigma(h_i - h_{i-1}) + O(log n) = h_n - h_1 + O(log n) = O(log n) }
     avl_tree_node<T> *split(avl_tree_node<T> * node){
-        if(node == nullptr) return nullptr;
         // splits away the tree of nodes right to 'node'.
+        if(node == nullptr) return nullptr;
         int size = 2 * root->height + 4;
         auto ** t1 = new avl_tree_node<T> * [size];
         auto ** t2 = new avl_tree_node<T> * [size];
@@ -443,6 +445,7 @@ struct avl_tree {
 
     // Time Complexity: O(log n) worst case.
     avl_tree_node<T> * _deal_with_concat_cases(avl_tree_node<T> * t1, avl_tree_node<T>* k, avl_tree_node<T>* t2){
+        // This function deals with the null cases for the concatenate method.
         if(t1 == nullptr){
             if(t2 == nullptr) return k;
             if(k == nullptr) return t2;

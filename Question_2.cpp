@@ -55,6 +55,16 @@ void update(avl_tree_node<Record> * node){
 /**------------------------- Question 2 ----------------------------------**/
 
 typedef struct DataStructure {
+    /*
+     * Solution:
+     *      To solve this question we will simply copy all the code from question 1 since we have been told to add the
+     *      new methods. As for the new methods, we will keep another array of size O(log n) where n is the current
+     *      amount of elements in the data structure. We then write each path from the node i and the node j to their
+     *      LCA to this array, and in ‘show_month_hits()’ we traverse these nodes and their right and left subtrees,
+     *      respectively (right for the lca->i path, left for the lca->j path). In ‘End_Month()’ all there’s left to do
+     *      is to reset the sizing and indexing fields, and free the array’s memory with delete[].
+     */
+
     /*-------------------- fields from question 2 --------------------------------*/
     avl_tree_node<Record> ** month_hits_subtrees = nullptr;
     int amount_of_left_subtrees = 0;
@@ -68,17 +78,21 @@ typedef struct DataStructure {
     DataStructure() = default;
     ~DataStructure() = default;
 
+    // Time Complexity: O(1)
     void Init(){
         max_price = {-1, -1, ""};
     }
 
+    // Time Complexity: O(log n)
     void Insert(int price, std::string name){
         Record record = {last_serial_number++, price, name};
         tree1.insert(record);
         max_price = tree1.root->_max;
     }
 
-    Record Delete(int number){ // changed the return value to the Record details we just deleted.
+    // Time Complexity: O(log n)
+    Record Delete(int number){
+        // changed the return value to the Record details we just deleted.
         // keep in mind that the search is done only using the serial number
         Record dummy = {number, -1, ""};
         auto temp = tree1.find(dummy);
@@ -91,6 +105,7 @@ typedef struct DataStructure {
         return record;
     }
 
+    // Time Complexity: O(1)
     Record Max_Price() {
         if(max_price.serial_number == -1)
             std::cout << "No elements in the data structure, so default max_price is returned." << std::endl;
@@ -98,6 +113,7 @@ typedef struct DataStructure {
     }
 
     /*-------------------- functions from question 2 ------------------------------*/
+    // Time Complexity: O(log n)
     void Pick_Month_Hits(int i, int j){
         /*
          * Description:
@@ -145,6 +161,7 @@ typedef struct DataStructure {
         month_hits_subtrees[amount_of_subtrees] = lca;
     }
 
+    // Time Complexity: O(k) where k is the amount of elements we need to print.
     void Show_Month_Hits() {
         /*
          * Description:
@@ -161,6 +178,7 @@ typedef struct DataStructure {
             _inorder_print(month_hits_subtrees[i]->left), std::cout << month_hits_subtrees[i]->value.name << " ";
     }
 
+    // Time Complexity: O(n) [ T(n) = 2 * T(log n) + 1 ]
     void _inorder_print(avl_tree_node<Record> * node){
         if(node == nullptr) return;
         _inorder_print(node->left);
@@ -168,6 +186,7 @@ typedef struct DataStructure {
         _inorder_print(node->right);
     }
 
+    // Time Complexity: O(1)
     void End_Month(){
         /*
          * Description:
