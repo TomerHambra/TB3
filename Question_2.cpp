@@ -136,7 +136,6 @@ typedef struct DataStructure {
         auto left_node = tree1.find(dummy1), right_node = tree1.find(dummy2);
         auto lca = tree1.lca(left_node, right_node);
 
-        // TODO: REVERSE sides from only right to only left and vise versa
         month_hits_subtrees = new avl_tree_node<Record> * [2 * tree1.root->height + 2];
         // inserting right path from lca to left_node
         auto it = lca->left;
