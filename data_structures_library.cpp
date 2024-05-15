@@ -24,6 +24,12 @@ int max(int a, int b){ return a < b ? b : a; }
 
 template <typename T>
 struct dynamic_array {
+    /*
+     * Description:
+     *      This is a template for a dynamic array of any type. It starts as an array of 8 cells, and just multiplies by 2
+     *      in size each time we have no space for a newly inserted element, just as in the lectures.
+     */
+
     int _size;
     int array_size;
     T *array;
@@ -45,7 +51,7 @@ struct dynamic_array {
             array = new T[array_size];
             for(int i = 0; i < _size; i++)
                 array[i] = temp[i];
-            delete[] temp;
+            delete[] temp; // freeing the previous array.
         } _size++;
         array[_size - 1] = value;
     }
@@ -70,12 +76,12 @@ struct dynamic_array {
 
     // Time Complexity: O(_size)
     dynamic_array<T>& operator=(const dynamic_array<T>& other){
-        // if function is called to set an array to be like itself
+        // if function is called to set an array to be like itself.
         if(this == &other)
             return *this;
         delete [] array;
 
-        // copying 'other'
+        // copying 'other'.
         _size = other._size;
         array_size = other.array_size;
         array = new T[other.array_size];
@@ -93,9 +99,16 @@ struct dynamic_array {
 
 template <typename T>
 struct avl_tree_node {
+    /*
+     * Description:
+     *      This is a container struct for the AVL tree nodes, so that we can keep the avl operations separated from the
+     *      generic type. The update function is just there so we can keep updating the _max cell in any way we want without
+     *      changing this container struct, basically abstracting it away. All operations are done in O(1) as shown below.
+     */
+
     avl_tree_node<T> *left, *right;
     T value, _max;
-    int count, height; // size of subtree and height
+    int count, height; // size of subtree and height, respectively.
     void (*update)(avl_tree_node<T>*);
 
 
@@ -127,7 +140,7 @@ struct avl_tree_node {
         right = right->left;
         temp->left = this;
 
-        // we first update this' values because its temp's child now
+        // we first update this' values because its temp's child now.
         this->update_values();
         temp->update_values();
         return temp;
@@ -139,7 +152,7 @@ struct avl_tree_node {
         left = left->right;
         temp->right = this;
 
-        // we first update this' values because its temp's child now
+        // we first update this' values because its temp's child now.
         this->update_values();
         temp->update_values();
         return temp;
@@ -149,14 +162,19 @@ struct avl_tree_node {
 
 template <typename T>
 struct avl_tree {
-    /// NOTE: Keep in mind that unless specified otherwise, n is the amount of elements which is equivalent to _size.
+    /*
+     * Description:
+     *      This is the generic avl tree. it keeps the tree structured in the efficient way shown in the lectures, and
+     *      all that with a general type and a general comparator so users can change them easily.
+     */
+    /// Note For Complexity Analysis: Keep in mind that unless specified otherwise, n is the amount of elements which is equivalent to _size.
     int _size, x;
     avl_tree_node<T> *root;
     bool (*comp)(T&, T&);
     void (*node_update)(avl_tree_node<T>*);
 
 
-    // Time Complexity: O( T::operator< )
+    // Time Complexity: O( T::operator< ) === O(1) [with the assumptions of this course]
     static bool less(T& a, T& b) { return a < b; }
 
     // Time Complexity: O(1)
@@ -172,7 +190,7 @@ struct avl_tree {
     // Time Complexity: O(n)
     void clear() { this->clear_subtree(root); }
 
-    // Time Complexity: O(node.count)
+    // Time Complexity: O(node.count) = O(n) [loose bound]
     void clear_subtree(avl_tree_node<T> *node){
         if(node == nullptr) return;
 
@@ -210,8 +228,10 @@ struct avl_tree {
         return node;
     }
 
+    // Time Complexity: O(log n)
     avl_tree_node<T>* _do_rotations(avl_tree_node<T> *node, T key){
-        // same as insert but without inserting. updates the values and rotates in the search path of key. O(log n) time.
+        // This function is the same as insert but without actually inserting. updates the values and rotates in the
+        // search path of key. O(log n) time.
         if(node == nullptr) return nullptr;
 
         // deciding the direction to go down in.
@@ -239,8 +259,8 @@ struct avl_tree {
 
     // Time Complexity: O(log n)
     avl_tree_node<T>* _find(avl_tree_node<T> * node, T key) const {
-        if(node == nullptr) return nullptr;
         // finds the node if exists, else finds it's parent
+        if(node == nullptr) return nullptr;
         if(comp(key, node->value)) return node->left ? _find(node->left, key) : node;
         if(comp(node->value, key)) return node->right ? _find(node->right, key) : node;
         return node;
@@ -251,9 +271,8 @@ struct avl_tree {
 
     // Time Complexity: O(log n)
     avl_tree_node<T>* _delete(avl_tree_node<T> *node, T key) {
-        if(node == nullptr) return node;
-
         // locating the node's search path, if found delete it (free the memory).
+        if(node == nullptr) return node;
         if(comp(key, node->value)) node->left = _delete(node->left, key);
         else if(comp(node->value, key)) node->right = _delete(node->right, key);
         else {
