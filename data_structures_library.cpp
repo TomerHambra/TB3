@@ -437,12 +437,12 @@ struct avl_tree {
             return _insert(t1, key);
         }
         if(k == nullptr) {
-            if(t1->height > 0) {
+            if(t1->height > 1) {
                 auto ma = new avl_tree_node<T>(max_node(t1)->value, node_update);
                 t1 = _delete(t1, ma->value);
                 return _concat(t1, ma, t2);
             }
-            if(t2->height > 0){
+            if(t2->height > 1){
                 auto mi = new avl_tree_node<T>(min_node(t2)->value, node_update);
                 t2 = _delete(t2, mi->value);
                 return _concat(t1, mi, t2);
